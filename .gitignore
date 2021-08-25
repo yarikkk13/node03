@@ -1,0 +1,5 @@
+.env
+./package-lock.json
+./.idea
+# Project exclude paths
+/node_modules/
