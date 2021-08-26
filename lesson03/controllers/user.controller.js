@@ -26,11 +26,14 @@ module.exports = {
             res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
             return;
         }
+
         if (name && name.search(/\d/) !== -1) {
             res.status(BAD_REQUEST).json({ error: 'number in name' });
             return;
         }
+
         await insertUser(req.body);
+
         res.status(CREATE).json(req.body);
     },
 
@@ -60,7 +63,9 @@ module.exports = {
         const {
             id, name, password, email
         } = req.body;
+
         const singleUser = await getUserByID(id);
+
         if (!singleUser) {
             res.status(NOT_FOUND).json({ error: 'user not found' });
             return;
@@ -75,6 +80,7 @@ module.exports = {
             res.status(BAD_REQUEST).json({ error: 'number in name' });
             return;
         }
+
         await updateUserInfo(id, req.body);
 
         res.json(req.body);

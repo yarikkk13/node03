@@ -7,18 +7,22 @@ module.exports = {
         const {
             id, name, password, email
         } = req.body;
+
         if (id) {
             res.status(BAD_REQUEST).json({ error: 'change id' });
             return;
         }
+
         if (!name && !password && !email) {
             res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
             return;
         }
+
         if (name && name.search(/\d/) !== -1) {
             res.status(BAD_REQUEST).json({ error: 'number in name' });
             return;
         }
+
         const existsUser = await getUserByEmail(email);
 
         if (existsUser) {
@@ -39,6 +43,7 @@ module.exports = {
             res.status(BAD_REQUEST).json({ error: "this user doesn't exist" });
             return;
         }
+
         if (existsUser.password !== password) {
             res.status(UNAUTHORIZED).json({ error: 'incorrect password' });
             return;

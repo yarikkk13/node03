@@ -41,6 +41,7 @@ module.exports = {
         const allUsers = await getAllUsers();
         const userInfo = allUsers.find((user) => String(user.id) === id);
         allUsers[id] = { ...userInfo, ...info };
+
         await writeFile(usersPath, JSON.stringify(allUsers));
     }
 };
