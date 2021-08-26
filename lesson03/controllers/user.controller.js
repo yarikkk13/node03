@@ -1,7 +1,9 @@
 const {
     findAll, insertUser, removeUserByID, updateUserInfo, getUserByID
 } = require('../services/user.service');
-const { BAD_REQUEST, NOT_FOUND } = require('../configs/status.codes.enum');
+const {
+    BAD_REQUEST, NOT_FOUND, CREATE, NO_CONTENT
+} = require('../configs/status.codes.enum');
 
 module.exports = {
     getAllUser: async (req, res) => {
@@ -27,7 +29,7 @@ module.exports = {
             return;
         }
         await insertUser(req.body);
-        res.json('success');
+        res.status(CREATE).json(req.body);
     },
 
     getUserById: async (req, res) => {
@@ -49,7 +51,7 @@ module.exports = {
             return;
         }
         await removeUserByID(id);
-        res.json(`user id: ${id} deleted`);
+        res.status(NO_CONTENT).json(`user id: ${id} deleted`);
     },
 
     updateUserById: async (req, res) => {
@@ -59,10 +61,6 @@ module.exports = {
         const singleUser = await getUserByID(id);
         if (!singleUser) {
             res.status(NOT_FOUND).json({ error: 'user not found' });
-            return;
-        }
-        if (id) {
-            res.status(BAD_REQUEST).json({ error: 'change id' });
             return;
         }
         if (!name && !password && !email) {
@@ -75,6 +73,6 @@ module.exports = {
         }
         await updateUserInfo(id, req.body);
 
-        res.json('User updated!');
+        res.json(req.body);
     }
 };
