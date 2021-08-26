@@ -16,11 +16,13 @@ module.exports = {
         const {
             id, name, password, email
         } = req.body;
+
         if (id) {
             res.status(BAD_REQUEST).json({ error: 'change id' });
             return;
         }
-        if (!name && !password && !email) {
+
+        if (!name || !password || !email) {
             res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
             return;
         }
@@ -63,10 +65,12 @@ module.exports = {
             res.status(NOT_FOUND).json({ error: 'user not found' });
             return;
         }
-        if (!name && !password && !email) {
+
+        if (!name || !password || !email) {
             res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
             return;
         }
+
         if (name && name.search(/\d/) !== -1) {
             res.status(BAD_REQUEST).json({ error: 'number in name' });
             return;
