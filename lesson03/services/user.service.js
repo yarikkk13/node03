@@ -24,6 +24,11 @@ module.exports = {
         return allUsers.find((user) => String(user.id) === id);
     },
 
+    getUserByEmail: async (email) => {
+        const allUsers = await getAllUsers();
+        return allUsers.find((user) => String(user.email) === email);
+    },
+
     removeUserByID: async (id) => {
         const allUsers = await getAllUsers();
         const filterUser = allUsers.filter((user) => String(user.id) !== id);
