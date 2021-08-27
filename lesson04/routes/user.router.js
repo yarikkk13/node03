@@ -1,31 +1,21 @@
 const router = require('express').Router();
 const {
-    getAllUser,
+    getAllUsers,
     createUser,
     getUserById,
     deleteUserById,
     updateUserById
 } = require('../controllers/user.controller');
-const { isEmailExist, isUserByIdExist } = require('../middlewares/user.middleware');
+const { isEmailExist, isUserByIdExist, isAllFieldsPresent } = require('../middlewares/user.middleware');
 
-router.get('/', getAllUser);
+router.get('/', getAllUsers);
 
-router.post('/', isEmailExist, createUser);
+router.post('/', isEmailExist, isAllFieldsPresent, createUser);
 
 router.get('/:user_id', isUserByIdExist, getUserById);
 
-router.delete('/:user_id', deleteUserById);
+router.delete('/:user_id', isUserByIdExist, deleteUserById);
 
-router.patch('/:user_id', updateUserById);
-
-// router.get('/', userController.getAllUsers);
-//
-// router.post('/', userController.createUser);
-//
-// router.get('/:userId', userMiddleware.userIdValidation, userController.getUserById);
-//
-// router.delete('/:userId', userMiddleware.userIdValidation, userController.deleteUserById);
-//
-// router.patch('/:userId', userMiddleware.userIdValidation, userController.updateUserById);
+router.patch('/:user_id', isUserByIdExist, updateUserById);
 
 module.exports = router;

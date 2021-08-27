@@ -1,16 +1,16 @@
-const User = require('../database');
+const { userModel } = require('../database');
 
 module.exports = {
-    findAll: () => User.find({}),
+    findAll: () => userModel.find({}),
 
-    insertUser: (user) => User.create(user),
+    insertUser: (user) => userModel.create(user),
 
-    getUserById: (user_id) => User.findById(user_id),
+    getUserById: (user_id) => userModel.findById(user_id),
 
-    getUserByEmail: (email) => User.findById(email),
+    getUserByEmail: (email) => userModel.findById(email),
 
-    removeUserById: (user_id) => User.findByIdAndDelete(user_id),
+    removeUserById: (user_id) => userModel.findByIdAndDelete(user_id),
 
-    updateUserInfo: (user_id, info) => User.findOneAndUpdate(user_id, info),
+    updateUserInfo: (user_id, info) => userModel.findOneAndUpdate(user_id, info),
 
 };

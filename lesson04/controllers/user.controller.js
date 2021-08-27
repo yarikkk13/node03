@@ -1,5 +1,4 @@
 const { CREATE, NO_CONTENT } = require('../configs/status.codes.enum');
-const { User } = require('../database');
 const { userServices } = require('../services');
 
 module.exports = {
@@ -15,7 +14,7 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const user = await User.create(req.body);
+            const user = await userServices.insertUser(req.body);
             res.status(CREATE).json(user);
         } catch (e) {
             next(e);
@@ -29,16 +28,6 @@ module.exports = {
             next(e);
         }
     },
-    //   getUserById: async (req, res, next) => {
-    //     try {
-    //       const { userId } = req.params;
-    //       const user = await userService.findById(userId);
-    //
-    //       res.json(user);
-    //     } catch (e) {
-    //       next(e);
-    //     }
-    //   },
 
     deleteUserById: async (req, res, next) => {
         try {
@@ -46,7 +35,7 @@ module.exports = {
 
             await userServices.removeUserById(user_id);
 
-            res.status(NO_CONTENT).json(`user id: ${user_id} deleted`);
+            res.status(NO_CONTENT).json('user deleted');
         } catch (e) {
             next(e);
         }
