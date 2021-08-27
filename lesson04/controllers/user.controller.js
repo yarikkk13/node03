@@ -1,9 +1,4 @@
-const {
-    removeUserByID, getUserByID
-} = require('../services/user.service');
-const {
-    NOT_FOUND, CREATE, NO_CONTENT
-} = require('../configs/status.codes.enum');
+const { CREATE, NO_CONTENT } = require('../configs/status.codes.enum');
 const { User } = require('../database');
 const { userServices } = require('../services');
 
@@ -45,15 +40,16 @@ module.exports = {
     //     }
     //   },
 
-    deleteUserById: async (req, res) => {
-        const { id } = req.params;
-        const singleUser = await getUserByID(id);
-        if (!singleUser) {
-            res.status(NOT_FOUND).json({ error: 'user not found' });
-            return;
+    deleteUserById: async (req, res, next) => {
+        try {
+            const { user_id } = req.params;
+
+            await userServices.removeUserById(user_id);
+
+            res.status(NO_CONTENT).json(`user id: ${user_id} deleted`);
+        } catch (e) {
+            next(e);
         }
-        await removeUserByID(id);
-        res.status(NO_CONTENT).json(`user id: ${id} deleted`);
     },
 
     updateUserById: async (req, res, next) => {
@@ -67,17 +63,3 @@ module.exports = {
         }
     },
 };
-
-//
-//   deleteUserById: async (req, res, next) => {
-//     try {
-//       const { userId } = req.params;
-//
-//       await userService.deleteUser(userId);
-//
-//       res.status(responseCodesEnum.DELETED).json(responseMessages.DELETED);
-//     } catch (e) {
-//       next(e);
-//     }
-//   }
-// };
