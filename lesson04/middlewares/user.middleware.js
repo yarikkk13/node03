@@ -1,6 +1,6 @@
 const { userModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
-const { NOT_FOUND } = require('../configs/status.codes.enum');
+const { NOT_FOUND, CONFLICT, BAD_REQUEST } = require('../configs/status.codes.enum');
 
 module.exports = {
     isEmailExist: async (req, res, next) => {
@@ -10,7 +10,7 @@ module.exports = {
             const userByEmail = await userModel.findOne({ email: email.trim() });
 
             if (userByEmail) {
-                throw new ErrorHandler(409, 'email is already exists');
+                throw new ErrorHandler(CONFLICT, 'email is already exists');
             }
             next();
         } catch (e) {
@@ -41,7 +41,7 @@ module.exports = {
             const { name, email } = req.body;
 
             if (!name || !email) {
-                throw new ErrorHandler(400, 'Required fields are empty');
+                throw new ErrorHandler(BAD_REQUEST, 'Required fields are empty');
             }
 
             next();

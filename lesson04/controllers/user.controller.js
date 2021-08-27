@@ -1,6 +1,6 @@
-const { CREATE, NO_CONTENT } = require('../configs/status.codes.enum');
 const { userServices } = require('../services');
 const { userModel } = require('../database');
+const { CREATE, NO_CONTENT, ACCEPTED } = require('../configs/status.codes.enum');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -16,6 +16,7 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const user = await userServices.insertUser(req.body);
+
             res.status(CREATE).json(user);
         } catch (e) {
             next(e);
@@ -45,8 +46,10 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { user_id } = req.params;
+
             await userModel.findByIdAndUpdate(user_id, req.body);
-            res.status(202).json('Update done successful');
+
+            res.status(ACCEPTED).json('Update done successful');
         } catch (e) {
             next(e);
         }

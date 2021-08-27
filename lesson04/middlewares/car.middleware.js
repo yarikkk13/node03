@@ -1,6 +1,6 @@
 const { carModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
-const { NOT_FOUND } = require('../configs/status.codes.enum');
+const { NOT_FOUND, BAD_REQUEST } = require('../configs/status.codes.enum');
 
 module.exports = {
     isCarByIdExist: async (req, res, next) => {
@@ -26,7 +26,7 @@ module.exports = {
             const { brand, year } = req.body;
 
             if (!brand || !year) {
-                throw new ErrorHandler(400, 'Required fields are empty');
+                throw new ErrorHandler(BAD_REQUEST, 'Required fields are empty');
             }
 
             next();

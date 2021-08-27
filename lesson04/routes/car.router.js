@@ -1,7 +1,11 @@
 const router = require('express').Router();
 
 const {
-    getAllCars, createCar, getCarById, deleteCarById, updateCarById
+    getAllCars,
+    createCar,
+    getCarById,
+    deleteCarById,
+    updateCarById
 } = require('../controllers/car.controller');
 const { isCarByIdExist, isAllFieldsPresent } = require('../middlewares/car.middleware');
 
