@@ -1,21 +1,18 @@
 const router = require('express').Router();
+
 const {
-    getAllUser,
-    createUser,
-    getUserById,
-    deleteUserById,
-    updateUserById
-} = require('../controllers/user.controller');
-const { isEmailExist, isUserByIdExist } = require('../middlewares/user.middleware');
+    getAllCars, createCar, getCarById, deleteCarById, updateCarById
+} = require('../controllers/car.controller');
+const { isCarByIdExist, isAllFieldsPresent } = require('../middlewares/car.middleware');
 
-router.get('/', getAllUser);
+router.get('/', getAllCars);
 
-router.post('/', isEmailExist, createUser);
+router.post('/', isAllFieldsPresent, createCar);
 
-router.get('/:car_id', isUserByIdExist, getUserById);
+router.get('/:car_id', isCarByIdExist, getCarById);
 
-router.delete('/:car_id', isUserByIdExist, deleteUserById);
+router.delete('/:car_id', isCarByIdExist, deleteCarById);
 
-router.patch('/:car_id', isUserByIdExist, updateUserById);
+router.patch('/:car_id', isCarByIdExist, updateCarById);
 
 module.exports = router;

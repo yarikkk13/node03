@@ -7,12 +7,12 @@ const { PORT } = require('./configs/config');
 
 mongoose.connect('mongodb://localhost:27017/inoxoft');
 
-const { userRouter, authRouter } = require('./routes');
+const { userRouter, carRouter } = require('./routes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', authRouter);
+app.use('/cars', carRouter);
 app.use('/users', userRouter);
 app.use(_mainErrorHandler);
 

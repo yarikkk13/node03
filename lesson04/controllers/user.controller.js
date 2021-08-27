@@ -1,5 +1,6 @@
 const { CREATE, NO_CONTENT } = require('../configs/status.codes.enum');
 const { userServices } = require('../services');
+const { userModel } = require('../database');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -44,8 +45,7 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-            await userServices.updateUserInfo(user_id, req.body);
-
+            await userModel.findByIdAndUpdate(user_id, req.body);
             res.status(202).json('Update done successful');
         } catch (e) {
             next(e);
