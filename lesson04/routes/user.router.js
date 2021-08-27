@@ -18,4 +18,14 @@ router.delete('/:user_id', deleteUserById);
 
 router.patch('/:user_id', updateUserById);
 
+// router.get('/', userController.getAllUsers);
+//
+// router.post('/', userController.createUser);
+//
+// router.get('/:userId', userMiddleware.userIdValidation, userController.getUserById);
+//
+// router.delete('/:userId', userMiddleware.userIdValidation, userController.deleteUserById);
+//
+// router.patch('/:userId', userMiddleware.userIdValidation, userController.updateUserById);
+
 module.exports = router;

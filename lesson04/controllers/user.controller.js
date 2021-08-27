@@ -1,42 +1,23 @@
 const {
-    findAll, removeUserByID, updateUserInfo, getUserByID
+    removeUserByID, getUserByID
 } = require('../services/user.service');
 const {
-    BAD_REQUEST, NOT_FOUND, CREATE, NO_CONTENT
+    NOT_FOUND, CREATE, NO_CONTENT
 } = require('../configs/status.codes.enum');
 const { User } = require('../database');
+const { userServices } = require('../services');
 
 module.exports = {
-    getAllUser: async (req, res) => {
-        const allUsers = await findAll();
+    getAllUsers: async (req, res, next) => {
+        try {
+            const allUsers = await userServices.findAll();
 
-        res.json(allUsers);
+            res.json(allUsers);
+        } catch (e) {
+            next(e);
+        }
     },
 
-    // createUser: async (req, res) => {
-    //     const {
-    //         id, name, password, email
-    //     } = req.body;
-    //
-    //     if (id) {
-    //         res.status(BAD_REQUEST).json({ error: 'change id' });
-    //         return;
-    //     }
-    //
-    //     if (!name || !password || !email) {
-    //         res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
-    //         return;
-    //     }
-    //
-    //     if (name && name.search(/\d/) !== -1) {
-    //         res.status(BAD_REQUEST).json({ error: 'number in name' });
-    //         return;
-    //     }
-    //
-    //     await insertUser(req.body);
-    //
-    //     res.status(CREATE).json(req.body);
-    // },
     createUser: async (req, res, next) => {
         try {
             const user = await User.create(req.body);
@@ -53,6 +34,16 @@ module.exports = {
             next(e);
         }
     },
+    //   getUserById: async (req, res, next) => {
+    //     try {
+    //       const { userId } = req.params;
+    //       const user = await userService.findById(userId);
+    //
+    //       res.json(user);
+    //     } catch (e) {
+    //       next(e);
+    //     }
+    //   },
 
     deleteUserById: async (req, res) => {
         const { id } = req.params;
@@ -65,30 +56,28 @@ module.exports = {
         res.status(NO_CONTENT).json(`user id: ${id} deleted`);
     },
 
-    updateUserById: async (req, res) => {
-        const {
-            id, name, password, email
-        } = req.body;
+    updateUserById: async (req, res, next) => {
+        try {
+            const { user_id } = req.params;
+            await userServices.updateUserInfo(user_id, req.body);
 
-        const singleUser = await getUserByID(id);
-
-        if (!singleUser) {
-            res.status(NOT_FOUND).json({ error: 'user not found' });
-            return;
+            res.status(202).json('Update done successful');
+        } catch (e) {
+            next(e);
         }
-
-        if (!name || !password || !email) {
-            res.status(BAD_REQUEST).json({ error: 'change pass or name or email' });
-            return;
-        }
-
-        if (name && name.search(/\d/) !== -1) {
-            res.status(BAD_REQUEST).json({ error: 'number in name' });
-            return;
-        }
-
-        await updateUserInfo(id, req.body);
-
-        res.json(req.body);
-    }
+    },
 };
+
+//
+//   deleteUserById: async (req, res, next) => {
+//     try {
+//       const { userId } = req.params;
+//
+//       await userService.deleteUser(userId);
+//
+//       res.status(responseCodesEnum.DELETED).json(responseMessages.DELETED);
+//     } catch (e) {
+//       next(e);
+//     }
+//   }
+// };

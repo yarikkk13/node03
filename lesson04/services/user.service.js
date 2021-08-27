@@ -1,47 +1,16 @@
-const path = require('path');
-
-const usersPath = path.join(__dirname, '..', 'database', 'users.json');
-const { readFile, writeFile } = require('../helpers/async');
-
-const getAllUsers = async () => {
-    const allUsers = await readFile(usersPath);
-    return JSON.parse(String(allUsers));
-};
+const User = require('../database');
 
 module.exports = {
-    findAll: () => getAllUsers(),
+    findAll: () => User.find({}),
 
-    insertUser: async (user) => {
-        const db = await getAllUsers();
+    insertUser: (user) => User.create(user),
 
-        db.push({ id: db.length, ...user });
+    getUserById: (user_id) => User.findById(user_id),
 
-        await writeFile(usersPath, JSON.stringify(db));
-    },
+    getUserByEmail: (email) => User.findById(email),
 
-    getUserByID: async (id) => {
-        const allUsers = await getAllUsers();
-        return allUsers.find((user) => String(user.id) === id);
-    },
+    removeUserById: (user_id) => User.findByIdAndDelete(user_id),
 
-    getUserByEmail: async (email) => {
-        const allUsers = await getAllUsers();
-        return allUsers.find((user) => String(user.email) === email);
-    },
+    updateUserInfo: (user_id, info) => User.findOneAndUpdate(user_id, info),
 
-    removeUserByID: async (id) => {
-        const allUsers = await getAllUsers();
-        const filterUser = allUsers.filter((user) => String(user.id) !== id);
-
-        await writeFile(usersPath, JSON.stringify(filterUser));
-        return filterUser;
-    },
-
-    updateUserInfo: async (id, info) => {
-        const allUsers = await getAllUsers();
-        const userInfo = allUsers.find((user) => String(user.id) === id);
-        allUsers[id] = { ...userInfo, ...info };
-
-        await writeFile(usersPath, JSON.stringify(allUsers));
-    }
 };

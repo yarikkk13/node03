@@ -14,4 +14,4 @@ const Car = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = model('laptop', Car);
+module.exports = model('car', Car);
