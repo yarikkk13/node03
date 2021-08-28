@@ -1,13 +1,18 @@
 const { carServices } = require('../services');
 const { carModel } = require('../database');
-const { CREATE, NO_CONTENT, ACCEPTED } = require('../configs/status.codes.enum');
+const {
+    ACCEPTED,
+    CREATE,
+    NO_CONTENT,
+    OK
+} = require('../configs/status.codes.enum');
 
 module.exports = {
     getAllCars: async (req, res, next) => {
         try {
             const allCars = await carServices.findAllCars();
 
-            res.json(allCars);
+            res.status(OK).json(allCars);
         } catch (e) {
             next(e);
         }
@@ -25,7 +30,7 @@ module.exports = {
 
     getCarById: (req, res, next) => {
         try {
-            res.json(req.car);
+            res.status(OK).json(req.car);
         } catch (e) {
             next(e);
         }

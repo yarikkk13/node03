@@ -1,13 +1,18 @@
 const { userServices } = require('../services');
 const { userModel } = require('../database');
-const { CREATE, NO_CONTENT, ACCEPTED } = require('../configs/status.codes.enum');
+const {
+    ACCEPTED,
+    CREATE,
+    NO_CONTENT,
+    OK
+} = require('../configs/status.codes.enum');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
             const allUsers = await userServices.findAll();
 
-            res.json(allUsers);
+            res.status(OK).json(allUsers);
         } catch (e) {
             next(e);
         }
@@ -25,7 +30,7 @@ module.exports = {
 
     getUserById: (req, res, next) => {
         try {
-            res.json(req.user);
+            res.status(OK).json(req.user);
         } catch (e) {
             next(e);
         }
