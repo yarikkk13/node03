@@ -14,6 +14,12 @@ const userSchema = new Schema({
         trim: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true,
+        trim: true,
+        select: false
+    },
     role: {
         type: String,
         default: userRolesEnum.USER,
