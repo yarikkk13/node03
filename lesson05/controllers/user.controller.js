@@ -6,7 +6,7 @@ const { statusCodes } = require('../configs');
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
-            const allUsers = await userServices.findAll();
+            const allUsers = await userServices.findAll().select('-password -__v');
 
             res.status(statusCodes.OK).json(allUsers);
         } catch (e) {

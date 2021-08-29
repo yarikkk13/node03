@@ -16,6 +16,7 @@ const createUserValidator = Joi.object({
 
     car: Joi.boolean(),
 });
+
 const updateUserValidator = Joi.object({
     name: Joi.string().alphanum().min(2).max(30)
         .trim(),

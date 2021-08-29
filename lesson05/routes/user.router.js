@@ -8,13 +8,15 @@ router.get('/', userController.getAllUsers);
 router.post('/',
     userMiddleware.areUserFieldsValid,
     userMiddleware.isEmailExist,
-    userMiddleware.isAllFieldsPresent,
     userController.createUser);
 
 router.get('/:user_id', userMiddleware.isUserByIdExist, userController.getUserById);
 
 router.delete('/:user_id', userMiddleware.isUserByIdExist, userController.deleteUserById);
 
-router.patch('/:user_id', userMiddleware.isUserByIdExist, userController.updateUserById);
+router.patch('/:user_id',
+    userMiddleware.areUserFieldsValidForUpdate,
+    userMiddleware.isUserByIdExist,
+    userController.updateUserById);
 
 module.exports = router;

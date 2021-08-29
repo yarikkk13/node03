@@ -23,7 +23,7 @@ module.exports = {
         try {
             const { user_id } = req.params;
 
-            const user = await userModel.findById(user_id);
+            const user = await userModel.findById(user_id).select('-password -__v');
 
             if (!user) {
                 throw new ErrorHandler(NOT_FOUND, 'User not found');
@@ -37,26 +37,12 @@ module.exports = {
         }
     },
 
-    isAllFieldsPresent: (req, res, next) => {
-        try {
-            const { name, email } = req.body;
-
-            if (!name || !email) {
-                throw new ErrorHandler(BAD_REQUEST, 'Required fields are empty');
-            }
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
     areUserFieldsValid: (req, res, next) => {
         try {
             const { error, value } = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(400, error.details[0].message);
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -65,5 +51,21 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-    }
+    },
+
+    areUserFieldsValidForUpdate: (req, res, next) => {
+        try {
+            const { error, value } = userValidator.updateUserValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+            }
+
+            req.body = value;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 };
