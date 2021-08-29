@@ -1,22 +1,16 @@
 const router = require('express').Router();
 
-const {
-    getAllCars,
-    createCar,
-    getCarById,
-    deleteCarById,
-    updateCarById
-} = require('../controllers/car.controller');
-const { isCarByIdExist, isAllFieldsPresent } = require('../middlewares/car.middleware');
+const { carController } = require('../controllers');
+const { carMiddleware } = require('../middlewares');
 
-router.get('/', getAllCars);
+router.get('/', carController.getAllCars);
 
-router.post('/', isAllFieldsPresent, createCar);
+router.post('/', carMiddleware.isAllFieldsPresent, carController.createCar);
 
-router.get('/:car_id', isCarByIdExist, getCarById);
+router.get('/:car_id', carMiddleware.isCarByIdExist, carController.getCarById);
 
-router.delete('/:car_id', isCarByIdExist, deleteCarById);
+router.delete('/:car_id', carMiddleware.isCarByIdExist, carController.deleteCarById);
 
-router.patch('/:car_id', isCarByIdExist, updateCarById);
+router.patch('/:car_id', carMiddleware.isCarByIdExist, carController.updateCarById);
 
 module.exports = router;

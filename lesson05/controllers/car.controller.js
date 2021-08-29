@@ -1,18 +1,13 @@
 const { carServices } = require('../services');
 const { carModel } = require('../database');
-const {
-    ACCEPTED,
-    CREATE,
-    NO_CONTENT,
-    OK
-} = require('../configs/status.codes.enum');
+const { statusCodes } = require('../configs');
 
 module.exports = {
     getAllCars: async (req, res, next) => {
         try {
             const allCars = await carServices.findAllCars();
 
-            res.status(OK).json(allCars);
+            res.status(statusCodes.OK).json(allCars);
         } catch (e) {
             next(e);
         }
@@ -22,7 +17,7 @@ module.exports = {
         try {
             const car = await carServices.insertCar(req.body);
 
-            res.status(CREATE).json(car);
+            res.status(statusCodes.CREATE).json(car);
         } catch (e) {
             next(e);
         }
@@ -30,7 +25,7 @@ module.exports = {
 
     getCarById: (req, res, next) => {
         try {
-            res.status(OK).json(req.car);
+            res.status(statusCodes.OK).json(req.car);
         } catch (e) {
             next(e);
         }
@@ -42,7 +37,7 @@ module.exports = {
 
             await carServices.removeCarById(car_id);
 
-            res.status(NO_CONTENT).json('car deleted');
+            res.status(statusCodes.NO_CONTENT).json('car deleted');
         } catch (e) {
             next(e);
         }
@@ -54,7 +49,7 @@ module.exports = {
 
             await carModel.findByIdAndUpdate(car_id, req.body);
 
-            res.status(ACCEPTED).json('Update done successful');
+            res.status(statusCodes.ACCEPTED).json('Update done successful');
         } catch (e) {
             next(e);
         }

@@ -1,18 +1,13 @@
 const { userServices } = require('../services');
 const { userModel } = require('../database');
-const {
-    ACCEPTED,
-    CREATE,
-    NO_CONTENT,
-    OK
-} = require('../configs/status.codes.enum');
+const { statusCodes } = require('../configs');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
             const allUsers = await userServices.findAll();
 
-            res.status(OK).json(allUsers);
+            res.status(statusCodes.OK).json(allUsers);
         } catch (e) {
             next(e);
         }
@@ -22,7 +17,7 @@ module.exports = {
         try {
             const user = await userServices.insertUser(req.body);
 
-            res.status(CREATE).json(user);
+            res.status(statusCodes.CREATE).json(user);
         } catch (e) {
             next(e);
         }
@@ -30,7 +25,7 @@ module.exports = {
 
     getUserById: (req, res, next) => {
         try {
-            res.status(OK).json(req.user);
+            res.status(statusCodes.OK).json(req.user);
         } catch (e) {
             next(e);
         }
@@ -42,7 +37,7 @@ module.exports = {
 
             await userServices.removeUserById(user_id);
 
-            res.status(NO_CONTENT).json('user deleted');
+            res.status(statusCodes.NO_CONTENT).json('user deleted');
         } catch (e) {
             next(e);
         }
@@ -54,7 +49,7 @@ module.exports = {
 
             await userModel.findByIdAndUpdate(user_id, req.body);
 
-            res.status(ACCEPTED).json('Update done successful');
+            res.status(statusCodes.ACCEPTED).json('Update done successful');
         } catch (e) {
             next(e);
         }
