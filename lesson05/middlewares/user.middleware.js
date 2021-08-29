@@ -59,10 +59,6 @@ module.exports = {
                 throw new ErrorHandler(400, error.details[0].message);
             }
 
-            // console.log('___________________________');
-            // console.log(value);
-            // console.log('___________________________');
-
             req.body = value;
 
             next();
