@@ -1,4 +1,5 @@
-const { userServices } = require('../services');
+const { userServices, passwordServices } = require('../services');
+const { userUtils, } = require('../utils');
 const { userModel } = require('../database');
 const { statusCodes } = require('../configs');
 
@@ -15,9 +16,14 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const user = await userServices.insertUser(req.body);
+            const { password } = req.body;
 
-            res.status(statusCodes.CREATE).json(user);
+            const hashPassword = await passwordServices.hash(password);
+            const user = await userServices.insertUser({ ...req.body, password: hashPassword });
+
+            const normalizedUser = userUtils.userNormalizator(user);
+
+            res.status(statusCodes.CREATE).json(normalizedUser);
         } catch (e) {
             next(e);
         }
@@ -25,7 +31,9 @@ module.exports = {
 
     getUserById: (req, res, next) => {
         try {
-            res.status(statusCodes.OK).json(req.user);
+            const normalizedUser = userUtils.userNormalizator(req.user);
+
+            res.status(statusCodes.OK).json(normalizedUser);
         } catch (e) {
             next(e);
         }
