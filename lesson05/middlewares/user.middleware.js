@@ -2,6 +2,7 @@ const { userModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { NOT_FOUND, CONFLICT, BAD_REQUEST } = require('../configs/status.codes.enum');
 const userValidator = require('../validators/user.validator');
+const { authValidators } = require('../validators');
 
 module.exports = {
     isEmailExist: async (req, res, next) => {
@@ -37,6 +38,24 @@ module.exports = {
         }
     },
 
+    isUserByEmailExist: async (req, res, next) => {
+        try {
+            const { email } = req.params;
+
+            const user = await userModel.findOne({ email });
+
+            if (!user) {
+                throw new ErrorHandler(NOT_FOUND, 'User not found');
+            }
+
+            req.user = user;
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    },
+
     areUserFieldsValid: (req, res, next) => {
         try {
             const { error, value } = userValidator.createUserValidator.validate(req.body);
@@ -56,6 +75,22 @@ module.exports = {
     areUserFieldsValidForUpdate: (req, res, next) => {
         try {
             const { error, value } = userValidator.updateUserValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+            }
+
+            req.body = value;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    isSignInValid: (req, res, next) => {
+        try {
+            const { error, value } = authValidators.signInUserValidator.validate(req.body);
 
             if (error) {
                 throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
