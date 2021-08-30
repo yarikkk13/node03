@@ -11,6 +11,6 @@ router.get('/:car_id', carMiddleware.isCarByIdExist, carController.getCarById);
 
 router.delete('/:car_id', carMiddleware.isCarByIdExist, carController.deleteCarById);
 
-router.patch('/:car_id', carMiddleware.areCarFieldsValid, carMiddleware.isCarByIdExist, carController.updateCarById);
+router.patch('/:car_id', carMiddleware.areCarFieldsValidForUpdate, carMiddleware.isCarByIdExist, carController.updateCarById);
 
 module.exports = router;
