@@ -5,12 +5,12 @@ const { carMiddleware } = require('../middlewares');
 
 router.get('/', carController.getAllCars);
 
-router.post('/', carMiddleware.isAllFieldsPresent, carController.createCar);
+router.post('/', carMiddleware.areCarFieldsValid, carController.createCar);
 
 router.get('/:car_id', carMiddleware.isCarByIdExist, carController.getCarById);
 
 router.delete('/:car_id', carMiddleware.isCarByIdExist, carController.deleteCarById);
 
-router.patch('/:car_id', carMiddleware.isCarByIdExist, carController.updateCarById);
+router.patch('/:car_id', carMiddleware.areCarFieldsValid, carMiddleware.isCarByIdExist, carController.updateCarById);
 
 module.exports = router;

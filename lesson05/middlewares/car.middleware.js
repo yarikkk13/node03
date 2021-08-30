@@ -1,6 +1,7 @@
 const { carModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { NOT_FOUND, BAD_REQUEST } = require('../configs/status.codes.enum');
+const carValidator = require('../validators/car.validator');
 
 module.exports = {
     isCarByIdExist: async (req, res, next) => {
@@ -21,17 +22,35 @@ module.exports = {
         }
     },
 
-    isAllFieldsPresent: (req, res, next) => {
+    areCarFieldsValid: (req, res, next) => {
         try {
-            const { brand, year } = req.body;
+            const { error, value } = carValidator.createCarValidator.validate(req.body);
 
-            if (!brand || !year) {
-                throw new ErrorHandler(BAD_REQUEST, 'Required fields are empty');
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
             }
+
+            req.body = value;
 
             next();
         } catch (e) {
             next(e);
         }
-    }
+    },
+
+    areCarFieldsValidForUpdate: (req, res, next) => {
+        try {
+            const { error, value } = carValidator.updateCarValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+            }
+
+            req.body = value;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 };
