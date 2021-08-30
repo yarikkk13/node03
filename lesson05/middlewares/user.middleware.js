@@ -40,9 +40,9 @@ module.exports = {
 
     isUserByEmailExist: async (req, res, next) => {
         try {
-            const { email } = req.params;
+            const { email } = req.body;
 
-            const user = await userModel.findOne({ email });
+            const user = await userModel.findOne({ email: email.trim() });
 
             if (!user) {
                 throw new ErrorHandler(NOT_FOUND, 'User not found');
