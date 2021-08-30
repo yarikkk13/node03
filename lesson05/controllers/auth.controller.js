@@ -1,7 +1,6 @@
 const { passwordServices, userServices } = require('../services');
 const { userUtils } = require('../utils');
 const { statusCodes } = require('../configs');
-const ErrorHandler = require('../errors/ErrorHandler');
 
 module.exports = {
 
@@ -25,13 +24,9 @@ module.exports = {
             const { password } = req.body;
             const { user } = req;
 
-            const passwordIdentical = await passwordServices.compare(password, user.password);
+            await passwordServices.compare(password, user.password);
 
-            if (!passwordIdentical) {
-                throw new ErrorHandler(statusCodes.BAD_REQUEST, 'email or password is incorrect');
-            }
-
-            res.status(statusCodes.OK).res.json('sign in successful');
+            res.status(statusCodes.OK).json('sign in successful');
         } catch (e) {
             return next(e);
         }

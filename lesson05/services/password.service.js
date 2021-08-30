@@ -9,7 +9,7 @@ module.exports = {
     compare: async (password, hashPassword) => {
         const isPasswordsTheSame = await bcrypt.compare(password, hashPassword);
 
-        if (isPasswordsTheSame) {
+        if (!isPasswordsTheSame) {
             throw new ErrorHandler(statusCodes.BAD_REQUEST, 'email or password is incorrect');
         }
     }
