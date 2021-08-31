@@ -25,7 +25,7 @@ const updateUserValidator = Joi.object({
 });
 
 const userIdValidator = Joi.object({
-    userId: Joi.string().trim().regex(configConstants.ID_REGEXP)
+    user_id: Joi.string().trim().regex(configConstants.ID_REGEXP)
 });
 
 module.exports = {
