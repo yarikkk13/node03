@@ -1,8 +1,7 @@
 const { userModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { NOT_FOUND, CONFLICT, BAD_REQUEST } = require('../configs/status.codes.enum');
-const userValidator = require('../validators/user.validator');
-const { authValidators } = require('../validators');
+const { authValidators, userValidators } = require('../validators');
 
 module.exports = {
     isEmailExist: async (req, res, next) => {
@@ -58,7 +57,8 @@ module.exports = {
 
     areUserFieldsValid: (req, res, next) => {
         try {
-            const { error, value } = userValidator.createUserValidator.validate(req.body);
+            // const { error, value } = userValidator.createUserValidator.validate(req.body);
+            const { error, value } = userValidators.createUserValidator.validate(req.body);
 
             if (error) {
                 throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
@@ -74,7 +74,7 @@ module.exports = {
 
     areUserFieldsValidForUpdate: (req, res, next) => {
         try {
-            const { error, value } = userValidator.updateUserValidator.validate(req.body);
+            const { error, value } = userValidators.updateUserValidator.validate(req.body);
 
             if (error) {
                 throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
@@ -103,4 +103,18 @@ module.exports = {
             next(e);
         }
     },
+
+    isUserIdValid: (req, res, next) => {
+        try {
+            const { error } = userValidators.userIdValidator.validate(req.params);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
 };
