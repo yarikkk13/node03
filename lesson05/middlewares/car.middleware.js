@@ -53,4 +53,18 @@ module.exports = {
             next(e);
         }
     },
+
+    isCarIdValid: (req, res, next) => {
+        try {
+            const { error } = carValidator.carIdValidator.validate(req.params);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 };
