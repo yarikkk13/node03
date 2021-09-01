@@ -3,3 +3,13 @@
 ./.idea
 # Project exclude paths
 /node_modules/
+./lesson06/.env
+.idea/dbnavigator.xml
+.idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/node03.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+package-lock.json
