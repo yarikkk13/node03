@@ -4,11 +4,9 @@ const { NOT_FOUND, BAD_REQUEST } = require('../configs/status.codes.enum');
 const carValidator = require('../validators/car.validator');
 
 module.exports = {
-    isCarByIdExist: async (req, res, next) => {
+    isCarByIdExist: (req, res, next) => {
         try {
-            const { car_id } = req.params;
-
-            const car = await carModel.findById(car_id);
+            const { car } = req;
 
             if (!car) {
                 throw new ErrorHandler(NOT_FOUND, 'Car not found');
@@ -67,4 +65,19 @@ module.exports = {
             next(e);
         }
     },
+
+    getCarByDynamicParam: (paramName, searchIn = 'body', dbField = paramName) => async (req, res, next) => {
+        try {
+            const value = req[searchIn][paramName];
+
+            const car = await carModel.findOne({ [dbField]: value });
+
+            req.car = car;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
+
 };

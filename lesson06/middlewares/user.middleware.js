@@ -1,17 +1,15 @@
 const { userModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
-const { NOT_FOUND, CONFLICT, BAD_REQUEST } = require('../configs/status.codes.enum');
+const { statusCodes } = require('../configs');
 const { authValidators, userValidators } = require('../validators');
 
 module.exports = {
-    isEmailExist: async (req, res, next) => {
+    isEmailExist: (req, res, next) => {
         try {
-            const { email } = req.body;
+            const { user } = req;
 
-            const userByEmail = await userModel.findOne({ email: email.trim() });
-
-            if (userByEmail) {
-                throw new ErrorHandler(CONFLICT, 'email is already exists');
+            if (user) {
+                throw new ErrorHandler(statusCodes.CONFLICT, 'email is already exists');
             }
             next();
         } catch (e) {
@@ -19,17 +17,13 @@ module.exports = {
         }
     },
 
-    isUserByIdExist: async (req, res, next) => {
+    isUserByIdExist: (req, res, next) => {
         try {
-            const { user_id } = req.params;
-
-            const user = await userModel.findById(user_id).select('-password -__v');
+            const { user } = req;
 
             if (!user) {
-                throw new ErrorHandler(NOT_FOUND, 'User not found');
+                throw new ErrorHandler(statusCodes.NOT_FOUND, 'User not found');
             }
-
-            req.user = user;
 
             next();
         } catch (err) {
@@ -44,7 +38,7 @@ module.exports = {
             const user = await userModel.findOne({ email: email.trim() });
 
             if (!user) {
-                throw new ErrorHandler(NOT_FOUND, 'User not found');
+                throw new ErrorHandler(statusCodes.NOT_FOUND, 'User not found');
             }
 
             req.user = user;
@@ -57,11 +51,10 @@ module.exports = {
 
     areUserFieldsValid: (req, res, next) => {
         try {
-            // const { error, value } = userValidator.createUserValidator.validate(req.body);
             const { error, value } = userValidators.createUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(statusCodes.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -77,7 +70,7 @@ module.exports = {
             const { error, value } = userValidators.updateUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(statusCodes.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -93,7 +86,7 @@ module.exports = {
             const { error, value } = authValidators.signInUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(statusCodes.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -109,7 +102,7 @@ module.exports = {
             const { error } = userValidators.userIdValidator.validate(req.params);
 
             if (error) {
-                throw new ErrorHandler(BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(statusCodes.BAD_REQUEST, error.details[0].message);
             }
 
             next();
@@ -117,4 +110,34 @@ module.exports = {
             next(e);
         }
     },
+
+    checkUserRole: (roleArr = []) => (req, res, next) => {
+        try {
+            const { role } = req.user;
+
+            if (!roleArr.length) {
+                return next();
+            }
+
+            if (!roleArr.includes(role)) {
+                throw new ErrorHandler(statusCodes.FORBIDDEN, 'forbidden');
+            }
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    getUserByDynamicParam: (paramName, searchIn = 'body', dbField = paramName) => async (req, res, next) => {
+        try {
+            const value = req[searchIn][paramName];
+
+            const user = await userModel.findOne({ [dbField]: value });
+
+            req.user = user;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
 };
