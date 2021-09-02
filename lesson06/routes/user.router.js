@@ -4,6 +4,7 @@ const { userController } = require('../controllers');
 const { userMiddleware } = require('../middlewares');
 
 router.use('/:user_id',
+    userMiddleware.isUserIdValid,
     userMiddleware.getUserByDynamicParam('user_id', 'params', '_id'),
     userMiddleware.isUserByIdExist);
 
@@ -16,12 +17,10 @@ router.post('/',
     userController.createUser);
 
 router.get('/:user_id',
-    userMiddleware.isUserIdValid,
     userMiddleware.checkUserRole(),
     userController.getUserById);
 
 router.delete('/:user_id',
-    userMiddleware.isUserIdValid,
     userController.deleteUserById);
 
 router.patch('/:user_id',
