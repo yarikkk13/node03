@@ -1,4 +1,4 @@
-const { userModel } = require('../database');
+const { UserModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { statusCodes } = require('../configs');
 const { authValidators, userValidators } = require('../validators');
@@ -35,7 +35,7 @@ module.exports = {
         try {
             const { email } = req.body;
 
-            const user = await userModel.findOne({ email: email.trim() });
+            const user = await UserModel.findOne({ email: email.trim() });
 
             if (!user) {
                 throw new ErrorHandler(statusCodes.NOT_FOUND, 'User not found');
@@ -131,7 +131,7 @@ module.exports = {
         try {
             const value = req[searchIn][paramName];
 
-            const user = await userModel.findOne({ [dbField]: value });
+            const user = await UserModel.findOne({ [dbField]: value });
 
             req.user = user;
 

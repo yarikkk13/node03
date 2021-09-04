@@ -1,6 +1,6 @@
 const { userServices, passwordServices } = require('../services');
 const { userUtils, } = require('../utils');
-const { userModel } = require('../database');
+const { UserModel } = require('../database');
 const { statusCodes } = require('../configs');
 
 module.exports = {
@@ -55,7 +55,7 @@ module.exports = {
         try {
             const { user_id } = req.params;
 
-            await userModel.findByIdAndUpdate(user_id, req.body);
+            await UserModel.findByIdAndUpdate(user_id, req.body);
 
             res.status(statusCodes.ACCEPTED).json('Update done successful');
         } catch (e) {

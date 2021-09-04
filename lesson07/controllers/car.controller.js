@@ -1,5 +1,5 @@
 const { carServices } = require('../services');
-const { carModel } = require('../database');
+const { CarModel } = require('../database');
 const { statusCodes } = require('../configs');
 
 module.exports = {
@@ -47,7 +47,7 @@ module.exports = {
         try {
             const { car_id } = req.params;
 
-            await carModel.findByIdAndUpdate(car_id, req.body);
+            await CarModel.findByIdAndUpdate(car_id, req.body);
 
             res.status(statusCodes.ACCEPTED).json('Update done successful');
         } catch (e) {

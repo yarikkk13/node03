@@ -5,9 +5,9 @@ require('dotenv').config();
 
 const app = express();
 
-const { PORT, DB_CONNECT_URL } = require('./configs/config');
+const { statusCodes, mainConfigs } = require('./configs');
 
-mongoose.connect(DB_CONNECT_URL);
+mongoose.connect(mainConfigs.DB_CONNECT_URL);
 
 const { authRouter, carRouter, userRouter } = require('./routes');
 
@@ -20,14 +20,14 @@ app.use('/users', userRouter);
 app.use(_mainErrorHandler);
 
 // application
-app.listen(PORT, () => {
+app.listen(mainConfigs.PORT, () => {
     // console.log('app listen port', PORT);
 });
 
 // eslint-disable-next-line no-unused-vars
 function _mainErrorHandler(err, req, res, next) {
     res
-        .status(err.status || 500)
+        .status(err.status || statusCodes.SERVER_ERROR)
         .json({
             message: err.message
         });

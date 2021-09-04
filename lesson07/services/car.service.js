@@ -1,10 +1,10 @@
-const { carModel } = require('../database');
+const { CarModel } = require('../database');
 
 module.exports = {
-    findAllCars: () => carModel.find({}),
+    findAllCars: () => CarModel.find({}),
 
-    insertCar: (car) => carModel.create(car),
+    insertCar: (car) => CarModel.create(car),
 
-    removeCarById: (car_id) => carModel.findByIdAndDelete(car_id),
+    removeCarById: (car_id) => CarModel.findByIdAndDelete(car_id),
 
 };

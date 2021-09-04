@@ -1,10 +1,10 @@
-const { userModel } = require('../database');
+const { UserModel } = require('../database');
 
 module.exports = {
-    findAll: () => userModel.find({}),
+    findAll: () => UserModel.find({}),
 
-    insertUser: (user) => userModel.create(user),
+    insertUser: (user) => UserModel.create(user),
 
-    removeUserById: (user_id) => userModel.findByIdAndDelete(user_id),
+    removeUserById: (user_id) => UserModel.findByIdAndDelete(user_id),
 
 };

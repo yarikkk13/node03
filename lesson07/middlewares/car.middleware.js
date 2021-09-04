@@ -1,4 +1,4 @@
-const { carModel } = require('../database');
+const { CarModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { NOT_FOUND, BAD_REQUEST } = require('../configs/status.codes.enum');
 const carValidator = require('../validators/car.validator');
@@ -70,7 +70,7 @@ module.exports = {
         try {
             const value = req[searchIn][paramName];
 
-            const car = await carModel.findOne({ [dbField]: value });
+            const car = await CarModel.findOne({ [dbField]: value });
 
             req.car = car;
 
