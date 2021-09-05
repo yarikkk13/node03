@@ -64,6 +64,19 @@ module.exports = {
         }
     },
 
+    superlogout: async (req, res, next) => {
+        try {
+            const { currentUser } = req;
+
+            await OauthModel.deleteMany({ user: currentUser });
+
+            res
+                .status(statusCodes.NO_CONTENT).json('Ok');
+        } catch (e) {
+            next(e);
+        }
+    },
+
     refreshToken: async (req, res, next) => {
         try {
             const token = req.get(configConstants.AUTHORIZATION);
