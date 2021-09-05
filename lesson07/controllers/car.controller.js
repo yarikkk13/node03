@@ -15,7 +15,9 @@ module.exports = {
 
     createCar: async (req, res, next) => {
         try {
-            const car = await carServices.insertCar(req.body);
+            const { currentUser } = req;
+
+            const car = await carServices.insertCar({ ...req.body, user: currentUser._id });
 
             res.status(statusCodes.CREATE).json(car);
         } catch (e) {

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { dbTablesEnum } = require('../configs');
 
 const Car = new Schema({
     brand: {
@@ -11,6 +12,11 @@ const Car = new Schema({
     },
     model: {
         type: String,
+    },
+    [dbTablesEnum.USER]: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: dbTablesEnum.USER
     }
 }, { timestamps: true });
 
