@@ -22,10 +22,14 @@ router.get('/:user_id',
     userController.getUserById);
 
 router.delete('/:user_id',
+    authMiddleware.checkAccessToken,
+    authMiddleware.checkForUserRights,
     userController.deleteUserById);
 
 router.patch('/:user_id',
     userMiddleware.areUserFieldsValidForUpdate,
+    authMiddleware.checkAccessToken,
+    authMiddleware.checkForUserRights,
     userController.updateUserById);
 
 module.exports = router;

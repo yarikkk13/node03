@@ -55,4 +55,22 @@ module.exports = {
             next(e);
         }
     },
+
+    checkForUserRights: (req, res, next) => {
+        try {
+            const { currentUser } = req;
+            const { user_id } = req.params;
+
+            const currentUserId = currentUser._id.toString();
+
+            if (currentUserId !== user_id) {
+                throw new ErrorHandler(statusCodes.FORBIDDEN, "can't touch this");
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
 };
