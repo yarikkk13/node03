@@ -15,10 +15,19 @@ router.post('/',
     authMiddleware.checkAccessToken,
     carController.createCar);
 
-router.get('/:car_id', carController.getCarById);
+router.get('/:car_id',
+    authMiddleware.checkAccessToken,
+    carController.getCarById);
 
-router.delete('/:car_id', carController.deleteCarById);
+router.delete('/:car_id',
+    authMiddleware.checkAccessToken,
+    carMiddleware.isUserOwnerOfCar,
+    carController.deleteCarById);
 
-router.patch('/:car_id', carMiddleware.areCarFieldsValidForUpdate, carController.updateCarById);
+router.patch('/:car_id',
+    carMiddleware.areCarFieldsValidForUpdate,
+    authMiddleware.checkAccessToken,
+    carMiddleware.isUserOwnerOfCar,
+    carController.updateCarById);
 
 module.exports = router;

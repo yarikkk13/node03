@@ -2,6 +2,7 @@ const { CarModel } = require('../database');
 const ErrorHandler = require('../errors/ErrorHandler');
 const { NOT_FOUND, BAD_REQUEST } = require('../configs/status.codes.enum');
 const carValidator = require('../validators/car.validator');
+const { statusCodes } = require('../configs');
 
 module.exports = {
     isCarByIdExist: (req, res, next) => {
@@ -78,6 +79,23 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-    }
+    },
+
+    isUserOwnerOfCar: (req, res, next) => {
+        try {
+            const { currentUser, car } = req;
+
+            const currentUserId = currentUser._id.toString();
+            const carOwnerId = car.user.toString();
+
+            if (currentUserId !== carOwnerId) {
+                throw new ErrorHandler(statusCodes.FORBIDDEN, "can't touch this");
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 
 };
