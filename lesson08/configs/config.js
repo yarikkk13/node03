@@ -4,4 +4,8 @@ module.exports = {
 
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'hello',
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'world',
+
+    EMAIL_HOST_USER: process.env.EMAIL_HOST_USER || 'test@gmail.com',
+    EMAIL_HOST_PASSWORD: process.env.EMAIL_HOST_PASSWORD || '12345',
+    FRONTED_URL: process.env.FRONTED_URL || 'https://inoxoft.com',
 };

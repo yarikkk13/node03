@@ -1,4 +1,4 @@
-const { userServices, passwordServices } = require('../services');
+const { emailServices, passwordServices, userServices, } = require('../services');
 const { userUtils, } = require('../utils');
 const { UserModel } = require('../database');
 const { statusCodes } = require('../configs');
@@ -29,9 +29,11 @@ module.exports = {
         }
     },
 
-    getUserById: (req, res, next) => {
+    getUserById: async (req, res, next) => {
         try {
             const normalizedUser = userUtils.userNormalizator(req.user);
+
+            await emailServices.sendMail('yar.mahas@gmail.com');
 
             res.status(statusCodes.OK).json(normalizedUser);
         } catch (e) {
