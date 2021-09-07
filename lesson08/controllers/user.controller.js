@@ -1,7 +1,7 @@
 const { emailServices, passwordServices, userServices, } = require('../services');
 const { userUtils, } = require('../utils');
 const { UserModel } = require('../database');
-const { statusCodes } = require('../configs');
+const { statusCodes, emailActionsEnum } = require('../configs');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -33,7 +33,8 @@ module.exports = {
         try {
             const normalizedUser = userUtils.userNormalizator(req.user);
 
-            await emailServices.sendMail('yar.mahas@gmail.com');
+            await emailServices.sendMail('yar.mahas@gmail.com', emailActionsEnum.WELCOME, { userName: req.user.name });
+            await emailServices.sendMail('yar.mahas@gmail.com', emailActionsEnum.GOODBYE, { userName: req.user.name });
 
             res.status(statusCodes.OK).json(normalizedUser);
         } catch (e) {
