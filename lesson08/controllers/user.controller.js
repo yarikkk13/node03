@@ -23,18 +23,17 @@ module.exports = {
 
             const normalizedUser = userUtils.userNormalizator(user);
 
+            await emailServices.sendMail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: req.user.name });
+
             res.status(statusCodes.CREATE).json(normalizedUser);
         } catch (e) {
             next(e);
         }
     },
 
-    getUserById: async (req, res, next) => {
+    getUserById: (req, res, next) => {
         try {
             const normalizedUser = userUtils.userNormalizator(req.user);
-
-            await emailServices.sendMail('yar.mahas@gmail.com', emailActionsEnum.WELCOME, { userName: req.user.name });
-            await emailServices.sendMail('yar.mahas@gmail.com', emailActionsEnum.GOODBYE, { userName: req.user.name });
 
             res.status(statusCodes.OK).json(normalizedUser);
         } catch (e) {
@@ -45,6 +44,8 @@ module.exports = {
     deleteUserById: async (req, res, next) => {
         try {
             const { user_id } = req.params;
+
+            await emailServices.sendMail(req.user.email, emailActionsEnum.GOODBYE, { userName: req.user.name });
 
             await userServices.removeUserById(user_id);
 
