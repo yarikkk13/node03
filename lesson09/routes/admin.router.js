@@ -16,6 +16,6 @@ router.post('/update',
     authMiddleware.isPasswordValid,
     authMiddleware.checkAccessToken,
     userMiddleware.checkUserRole([userRolesEnum.ADMIN]),
-    adminController.setAdminData);
+    adminController.updateAdmin);
 
 module.exports = router;

@@ -9,12 +9,15 @@ const { statusCodes, mainConfigs } = require('./configs');
 
 mongoose.connect(mainConfigs.DB_CONNECT_URL);
 
-const { authRouter, carRouter, userRouter } = require('./routes');
+const {
+    authRouter, carRouter, userRouter, adminRouter
+} = require('./routes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', authRouter);
+app.use('/admin', adminRouter);
 app.use('/cars', carRouter);
 app.use('/users', userRouter);
 app.use(_mainErrorHandler);
