@@ -110,7 +110,7 @@ module.exports = {
             await ActionTokenModel.create({ token: actionToken, user: user._id });
 
             await emailServices.sendMail(
-                'yar.mahas@gmail.com',
+                user.email,
                 emailActionsEnum.FORGOT_PASSWORD,
                 { forgotPassUrl: `${mainConfigs.FRONTED_URL}/forgot?${actionToken}` }
             );
