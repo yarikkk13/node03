@@ -1,6 +1,6 @@
 const { emailServices, jwtServices, passwordServices, } = require('../services');
 const { userUtils } = require('../utils');
-const { emailActionsEnum, mainConfigs, } = require('../configs');
+const { emailActionsEnum, mainConfigs, statusCodes, } = require('../configs');
 const { ActionTokenModel, UserModel } = require('../database');
 const { authController } = require('./index');
 
@@ -18,9 +18,11 @@ module.exports = {
 
             const reg_link = `${mainConfigs.FRONTED_URL}/admin/update?action_token=${action_token}`;
 
-            emailServices.sendMail(current_user.email, emailActionsEnum.ACC_CREATED, { reg_link });
+            await emailServices.sendMail(current_user.email, emailActionsEnum.ACC_CREATED, { reg_link });
 
-            res.json({ action_token, user: userUtils.userNormalizator(userAdmin) });
+            const normalizedAdmin = userUtils.userNormalizator(userAdmin);
+
+            res.status(statusCodes.CREATE).json({ action_token, user: normalizedAdmin });
             next();
         } catch (e) {
             next(e);
@@ -37,9 +39,9 @@ module.exports = {
 
             await ActionTokenModel.deleteMany({ user: current_user._id });
 
-            authController.superlogout(current_user);
+            await authController.superlogout(current_user);
 
-            res.json('Data set.');
+            res.status(statusCodes.ACCEPTED).json('Update done successful');
             next();
         } catch (e) {
             next(e);
