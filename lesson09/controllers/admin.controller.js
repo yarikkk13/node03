@@ -1,8 +1,7 @@
 const { emailServices, jwtServices, passwordServices, } = require('../services');
 const { userUtils } = require('../utils');
 const { emailActionsEnum, mainConfigs, statusCodes, } = require('../configs');
-const { ActionTokenModel, UserModel } = require('../database');
-const { authController } = require('./index');
+const { ActionTokenModel, UserModel, OauthModel } = require('../database');
 
 module.exports = {
 
@@ -39,7 +38,7 @@ module.exports = {
 
             await ActionTokenModel.deleteMany({ user: current_user._id });
 
-            await authController.superlogout(current_user);
+            await OauthModel.deleteMany({ user: current_user });
 
             res.status(statusCodes.ACCEPTED).json('Update done successful');
             next();
