@@ -25,7 +25,7 @@ module.exports = {
 
             const normalizedUser = userUtils.userNormalizator(user);
 
-            await emailServices.sendMail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: req.user.name });
+            await emailServices.sendMail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: user.name });
 
             res.status(statusCodes.CREATE).json(normalizedUser);
         } catch (e) {
