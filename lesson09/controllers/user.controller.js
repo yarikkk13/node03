@@ -1,7 +1,9 @@
 const { emailServices, passwordServices, userServices, } = require('../services');
 const { userUtils, } = require('../utils');
 const { UserModel } = require('../database');
-const { statusCodes, emailActionsEnum } = require('../configs');
+const {
+    emailActionsEnum, mainConfigs, statusCodes, userRolesEnum
+} = require('../configs');
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -66,4 +68,25 @@ module.exports = {
             next(e);
         }
     },
+
+    createFirstAdmin: async () => {
+        try {
+            const user = await UserModel.findOne({ role: userRolesEnum.ADMIN });
+
+            if (!user) {
+                const hashedPass = await passwordServices.hash(mainConfigs.FIRST_ADMIN_PASS);
+
+                await UserModel.create({
+                    name: userRolesEnum.ADMIN,
+                    email: mainConfigs.FIRST_ADMIN_EMAIL,
+                    password: hashedPass,
+                    role: userRolesEnum.ADMIN,
+                });
+            }
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.log(e);
+        }
+    },
+
 };

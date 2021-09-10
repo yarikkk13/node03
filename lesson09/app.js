@@ -6,6 +6,7 @@ require('dotenv').config();
 const app = express();
 
 const { statusCodes, mainConfigs } = require('./configs');
+const { userController } = require('./controllers');
 
 mongoose.connect(mainConfigs.DB_CONNECT_URL);
 
@@ -25,6 +26,7 @@ app.use(_mainErrorHandler);
 // application
 app.listen(mainConfigs.PORT, () => {
     // console.log('app listen port', PORT);
+    userController.createFirstAdmin();
 });
 
 // eslint-disable-next-line no-unused-vars
