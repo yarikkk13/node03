@@ -8,7 +8,7 @@ module.exports = {
 
     EMAIL_HOST_USER: process.env.EMAIL_HOST_USER || 'test@gmail.com',
     EMAIL_HOST_PASSWORD: process.env.EMAIL_HOST_PASSWORD || '12345',
-    FRONTED_URL: process.env.FRONTED_URL || 'https://inoxoft.com',
+    FRONTED_URL: process.env.FRONTED_URL || 'http://localhost:5000',
 
     FIRST_ADMIN_EMAIL: process.env.FIRST_ADMIN_EMAIL || 'first_admin@gmail.com',
     FIRST_ADMIN_PASS: process.env.FIRST_ADMIN_PASS || 'Pass1@#$'
