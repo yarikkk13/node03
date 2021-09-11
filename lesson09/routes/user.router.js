@@ -17,8 +17,8 @@ router.post('/',
     userController.createUser);
 
 router.get('/:user_id',
-    userMiddleware.checkUserRole(),
     authMiddleware.checkAccessToken,
+    userMiddleware.checkUserRole(),
     userController.getUserById);
 
 router.delete('/:user_id',
