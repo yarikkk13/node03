@@ -9,6 +9,7 @@
     "node": "12.*.*"
   },
   "dependencies": {
+    "aws-sdk": "^2.987.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "email-templates": "^8.0.8",
@@ -20,7 +21,8 @@
     "mongoose": "^6.0.2",
     "nodemailer": "^6.6.3",
     "pm2": "^5.1.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.4",

@@ -11,5 +11,10 @@ module.exports = {
     FRONTED_URL: process.env.FRONTED_URL || 'http://localhost:5000',
 
     FIRST_ADMIN_EMAIL: process.env.FIRST_ADMIN_EMAIL || 'first_admin@gmail.com',
-    FIRST_ADMIN_PASS: process.env.FIRST_ADMIN_PASS || 'Pass1@#$'
+    FIRST_ADMIN_PASS: process.env.FIRST_ADMIN_PASS || 'Pass1@#$',
+
+    AWS_S3_NAME: process.env.AWS_S3_NAME,
+    AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY,
+    AWS_S3_ACCESS_KEY: process.env.AWS_S3_ACCESS_KEY,
+    AWS_S3_REGION: process.env.AWS_S3_REGION,
 };

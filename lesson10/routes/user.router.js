@@ -1,7 +1,12 @@
 const router = require('express').Router();
 
 const { userController } = require('../controllers');
-const { userMiddleware, authMiddleware } = require('../middlewares');
+const { userMiddleware, authMiddleware, fileMiddleware } = require('../middlewares');
+
+router.post('/create_aws',
+    userMiddleware.areUserFieldsValid,
+    fileMiddleware.checkUserAvatar,
+    userController.createUserAWS);
 
 router.use('/:user_id',
     userMiddleware.isUserIdValid,
@@ -12,6 +17,7 @@ router.get('/', userController.getAllUsers);
 
 router.post('/',
     userMiddleware.areUserFieldsValid,
+    fileMiddleware.checkUserAvatar,
     userMiddleware.getUserByDynamicParam('email'),
     userMiddleware.isEmailExist,
     userController.createUser);

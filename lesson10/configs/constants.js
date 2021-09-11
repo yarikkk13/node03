@@ -5,4 +5,11 @@ module.exports = {
     EMAIL_REGEXP: new RegExp('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$'),
     ID_REGEXP: new RegExp('^[0-9a-fA-F]{24}$'),
     YEAR_OF_FIRST_CAR: 1886,
+
+    MAX_AVATAR_SIZE: 5 * 1024 * 1024,
+
+    PHOTOS_MIMETYPES: [
+        'image/gif',
+        'image/jpeg'
+    ]
 };
