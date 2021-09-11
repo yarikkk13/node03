@@ -1,4 +1,6 @@
-const { emailServices, passwordServices, userServices, } = require('../services');
+const {
+    emailServices, passwordServices, userServices, s3Services
+} = require('../services');
 const { userUtils, } = require('../utils');
 const { UserModel } = require('../database');
 const {
@@ -26,6 +28,29 @@ module.exports = {
             const normalizedUser = userUtils.userNormalizator(user);
 
             await emailServices.sendMail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: user.name });
+
+            res.status(statusCodes.CREATE).json(normalizedUser);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    createUserAWS: async (req, res, next) => {
+        try {
+            const { avatar } = req.files;
+            const { password } = req.body;
+
+            const hashPassword = await passwordServices.hash(password);
+            let user = await userServices.insertUser({ ...req.body, password: hashPassword });
+
+            if (avatar) {
+                const { _id } = user;
+                const uploadFile = await s3Services.uploadImage(avatar, 'organization', _id);
+
+                user = await UserModel.findByIdAndUpdate(_id, { avatar: uploadFile.Location }, { new: true });
+            }
+
+            const normalizedUser = userUtils.userNormalizator(user);
 
             res.status(statusCodes.CREATE).json(normalizedUser);
         } catch (e) {
