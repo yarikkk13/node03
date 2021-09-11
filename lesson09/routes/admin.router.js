@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const { adminController } = require('../controllers');
-const { userRolesEnum } = require('../configs');
+const { userRolesEnum, actionTypesEnum } = require('../configs');
 const { userMiddleware, authMiddleware } = require('../middlewares');
 
 router.post('/register',
@@ -9,13 +9,12 @@ router.post('/register',
     authMiddleware.checkAccessToken,
     userMiddleware.checkUserRole([userRolesEnum.ADMIN]),
     userMiddleware.getUserByDynamicParam('email'),
-    userMiddleware.isUserByIdExist,
+    userMiddleware.isEmailExist,
     adminController.registerAdmin);
 
 router.post('/update',
-    authMiddleware.isPasswordValid,
-    authMiddleware.checkAccessToken,
-    userMiddleware.checkUserRole([userRolesEnum.ADMIN]),
+    userMiddleware.areUserFieldsValid,
+    authMiddleware.checkActionToken(actionTypesEnum.FIRST_LOGIN),
     adminController.updateAdmin);
 
 module.exports = router;

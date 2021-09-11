@@ -25,6 +25,8 @@ const updateUserValidator = Joi.object({
 });
 
 const passwordValidator = Joi.object({
+    name: Joi.string().alphanum().min(2).max(30)
+        .trim(),
     password: Joi.string().regex(configConstants.PASSWORD_REGEXP).trim().required(),
 });
 

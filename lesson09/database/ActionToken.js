@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose');
 const { dbTablesEnum } = require('../configs');
 
 const ActionTokenSchema = new Schema({
-    access_token: {
+    action_token: {
         type: String,
         required: true
     },

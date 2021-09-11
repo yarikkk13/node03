@@ -113,7 +113,7 @@ module.exports = {
 
     checkUserRole: (roleArr = []) => (req, res, next) => {
         try {
-            const { role } = req.user;
+            const { role } = req.currentUser;
 
             if (!roleArr.length) {
                 return next();
@@ -122,6 +122,7 @@ module.exports = {
             if (!roleArr.includes(role)) {
                 throw new ErrorHandler(statusCodes.FORBIDDEN, 'forbidden');
             }
+            next();
         } catch (e) {
             next(e);
         }

@@ -1,23 +1,24 @@
 const { emailServices, jwtServices, passwordServices, } = require('../services');
 const { userUtils } = require('../utils');
-const { emailActionsEnum, mainConfigs, statusCodes, } = require('../configs');
+const {
+    emailActionsEnum, mainConfigs, statusCodes, actionTypesEnum, userRolesEnum
+} = require('../configs');
 const { ActionTokenModel, UserModel, OauthModel } = require('../database');
 
 module.exports = {
 
     registerAdmin: async (req, res, next) => {
         try {
-            const { current_user } = req;
+            const userAdmin = await UserModel.create({ ...req.body, is_active: false, role: userRolesEnum.ADMIN });
 
-            const userAdmin = await UserModel.create({ ...req.body, is_active: false });
+            const action_token = jwtServices.generateActionToken(actionTypesEnum.FIRST_LOGIN);
 
-            const action_token = jwtServices.generateActionToken();
-
-            await ActionTokenModel.create({ action_token, user: current_user._id });
+            console.log(userAdmin._id);
+            await ActionTokenModel.create({ action_token, user: userAdmin._id });
 
             const reg_link = `${mainConfigs.FRONTED_URL}/admin/update?action_token=${action_token}`;
 
-            await emailServices.sendMail(current_user.email, emailActionsEnum.ACC_CREATED, { reg_link });
+            await emailServices.sendMail(userAdmin.email, emailActionsEnum.ACC_CREATED, { reg_link });
 
             const normalizedAdmin = userUtils.userNormalizator(userAdmin);
 
@@ -30,15 +31,15 @@ module.exports = {
 
     updateAdmin: async (req, res, next) => {
         try {
-            const { body: { name, password }, current_user } = req;
+            const { body: { name, password }, currentUser } = req;
 
             const hashPassword = await passwordServices.hash(password);
 
-            await UserModel.findByIdAndUpdate({ _id: current_user._id }, { password: hashPassword, name, is_active: true });
+            await UserModel.findByIdAndUpdate({ _id: currentUser._id }, { password: hashPassword, name, is_active: true });
 
-            await ActionTokenModel.deleteMany({ user: current_user._id });
+            await ActionTokenModel.deleteMany({ user: currentUser._id });
 
-            await OauthModel.deleteMany({ user: current_user });
+            await OauthModel.deleteMany({ user: currentUser });
 
             res.status(statusCodes.ACCEPTED).json('Update done successful');
             next();
