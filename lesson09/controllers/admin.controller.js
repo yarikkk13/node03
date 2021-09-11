@@ -13,7 +13,6 @@ module.exports = {
 
             const action_token = jwtServices.generateActionToken(actionTypesEnum.FIRST_LOGIN);
 
-            console.log(userAdmin._id);
             await ActionTokenModel.create({ action_token, user: userAdmin._id });
 
             const reg_link = `${mainConfigs.FRONTED_URL}/admin/update?action_token=${action_token}`;
