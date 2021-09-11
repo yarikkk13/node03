@@ -32,6 +32,9 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
+    avatar: {
+        type: String
+    },
     role: {
         type: String,
         default: userRolesEnum.USER,
