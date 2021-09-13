@@ -10,9 +10,14 @@ const {
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
-            const allUsers = await userServices.findAll().select('-password -__v');
+            const { size, page } = req.query;
 
-            res.status(statusCodes.OK).json(allUsers);
+            const users = await UserModel
+                .find()
+                .limit(+size).skip((page - 1) * size)
+                .select('-password -__v');
+
+            res.status(statusCodes.OK).json(users);
         } catch (e) {
             next(e);
         }

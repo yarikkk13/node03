@@ -53,7 +53,9 @@ function _mainErrorHandler(err, req, res, next) {
     res
         .status(err.status || statusCodes.SERVER_ERROR)
         .json({
-            message: err.message
+            message: err.message || 'Unknown error',
+            customCode: err.customCode,
+            data: err.data
         });
 }
 

@@ -32,6 +32,10 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
+    language: {
+        type: String,
+        default: 'en'
+    },
     avatar: {
         type: String
     },
