@@ -37,15 +37,14 @@ module.exports = {
 
     createUserAWS: async (req, res, next) => {
         try {
-            const { avatar } = req.files;
             const { password } = req.body;
 
             const hashPassword = await passwordServices.hash(password);
             let user = await userServices.insertUser({ ...req.body, password: hashPassword });
 
-            if (avatar) {
+            if (req.files && req.files.avatar) {
                 const { _id } = user;
-                const uploadFile = await s3Services.uploadImage(avatar, 'organization', _id);
+                const uploadFile = await s3Services.uploadImage(req.files.avatar, 'organization', _id);
 
                 user = await UserModel.findByIdAndUpdate(_id, { avatar: uploadFile.Location }, { new: true });
             }

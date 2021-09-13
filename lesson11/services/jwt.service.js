@@ -6,7 +6,7 @@ const { actionTypesEnum, mainConfigs, statusCodes, } = require('../configs');
 module.exports = {
     generateTokenPair: () => {
         const access_token = jwt.sign({}, mainConfigs.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-        const refresh_token = jwt.sign({}, mainConfigs.REFRESH_TOKEN_SECRET, { expiresIn: '28d' });
+        const refresh_token = jwt.sign({}, mainConfigs.REFRESH_TOKEN_SECRET, { expiresIn: '31d' });
 
         return {
             access_token,

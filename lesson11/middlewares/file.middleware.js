@@ -5,13 +5,12 @@ module.exports = {
 
     checkUserAvatar: (req, res, next) => {
         try {
-            const { avatar } = req.files;
-
-            if (!avatar) {
+            if (!req.files || !req.files.avatar) {
                 next();
                 return;
             }
-            const { name, size, mimetype } = avatar;
+
+            const { name, size, mimetype } = req.files.avatar;
 
             if (size > configConstants.MAX_AVATAR_SIZE) {
                 throw new ErrorHandler(statusCodes.BAD_REQUEST, `File ${name} is too big`);
