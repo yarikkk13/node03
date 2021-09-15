@@ -11,36 +11,314 @@
         "tags": [
           "users"
         ],
-        "description": "Get all users",
-        "operationId": "users",
+        "description": "get_all_users_with_query_params",
+        "operationId": "getAllUsers",
         "parameters": [
           {
             "name": "size",
             "in": "query",
-            "description": "how many items will be shown in one page",
+            "description": "quantity of items in one page",
             "required": false,
-            "default": 10,
+            "default": 5,
             "type": "number"
           },
           {
             "name": "page",
             "in": "query",
-            "description": "number of page",
+            "description": "Page number",
             "required": false,
             "default": 1,
             "type": "number"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field by which we sort our data",
+            "required": false,
+            "default": "createdAt",
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "in what order we want see users",
+            "required": false,
+            "default": "asc",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success response",
+            "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/singleUser"
+              "$ref": "#/definitions/UserQueryParam"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by everyone",
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserModel"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/UserModel"
+            }
+          },
+          "400": {
+            "description": "data is not valid",
+            "examples": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "status code of error",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "description": "description of error",
+                  "example": "invalid data (email, password etc)"
+                },
+                "customCode": {
+                  "type": "string",
+                  "description": "custom status code if exists",
+                  "example": "400.1"
+                },
+                "data": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "conflict",
+            "examples": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "status code of error",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "description": "description of error",
+                  "example": "email exists"
+                },
+                "customCode": {
+                  "type": "string",
+                  "description": "custom status code if exists",
+                  "example": "409.1"
+                },
+                "data": {
+                  "type": "string",
+                  "example": ""
+                }
               }
             }
           }
+        }
+      }
+    },
+    "/": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "logs user into the system",
+        "description": "logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "user's email for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "user's password for login",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "access_token": {
+                "type": "string",
+                "description": "token for access"
+              },
+              "refresh_token": {
+                "type": "string",
+                "description": "token for refresh"
+              },
+              "user": {"$ref": "#/definitions/UserModel"}
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "examples": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "status code of error",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "description": "description of error",
+                  "example": "email or password is not correct"
+                },
+                "customCode": {
+                  "type": "string",
+                  "description": "custom status code if exists",
+                  "example": "400.1"
+                },
+                "data": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "user not found",
+            "examples": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "description": "status code of error",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "description": "description of error",
+                  "example": "user not found"
+                },
+                "customCode": {
+                  "type": "string",
+                  "description": "custom status code if exists",
+                  "example": "404.1"
+                },
+                "data": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserModel": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "description": "user's unique ID",
+          "type": "string",
+          "example": "613934234324bc472b3"
+        },
+        "name": {
+          "description": "user's name",
+          "type": "string",
+          "example": "Igor"
+        },
+        "email": {
+          "description": "user's email",
+          "type": "string",
+          "example": "test@example.com"
+        },
+        "role": {
+          "description": "user role",
+          "type": "string",
+          "enum": [
+            "admin",
+            "user"
+          ],
+          "example": "user"
+        },
+        "is_active": {
+          "description": "state of user's account",
+          "type": "boolean",
+          "example": true
+        },
+        "is_deleted": {
+          "description": "state of user's account",
+          "type": "boolean",
+          "example": true
+        },
+        "createdAt": {
+          "description": "when user created account",
+          "type": "string",
+          "example": "2021-09-10T21:03:58.113Z"
+        },
+        "updatedAt": {
+          "description": "when user updated account",
+          "type": "string",
+          "example": "2021-09-10T21:03:58.113Z"
+        },
+        "avatar": {
+          "description": "directory of user's avatar",
+          "type": "string",
+          "example": "http://localhost:5000/users%5C613f0dbb6d8b8b708eafd5Ccc9943f0-146d-11ec-b0c2-b992ddb6d442.jpeg"
+        }
+      }
+    },
+    "UserQueryParam": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "all users filtered by query params",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserModel"
+          }
+        },
+        "size": {
+          "description": "number of users per one page",
+          "type": "number",
+          "example": 5
+        },
+        "page": {
+          "description": "current page",
+          "type": "number",
+          "example": 1
+        },
+        "items": {
+          "description": "quantity of users found",
+          "type": "number",
+          "example": 10
+        },
+        "pages": {
+          "description": "quantity of pages with users ",
+          "type": "number",
+          "example": 2
         }
       }
     }
