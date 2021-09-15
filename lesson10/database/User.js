@@ -52,7 +52,7 @@ userSchema.methods = { // for single record // THIS - RECORD
     }
 };
 
-// Accessing non-existent property 'passwordServices' of module exports inside circular dependency
+// Accessing non-existent property 'passwordServices' of module exports inside circular dependency (fixed, comment only for me)
 userSchema.statics = { // for schema // THIS - SCHEMA
     async createWithHashPassword(userObject) {
         const hashPassword = await passwordServices.hash(userObject.password);
