@@ -3,7 +3,7 @@ const { UserModel } = require('../database');
 module.exports = {
     findAll: async (query = {}) => {
         const {
-            size = 20,
+            size = 5,
             page = 1,
             sortBy = 'createdAt',
             order = 'asc',
@@ -13,14 +13,15 @@ module.exports = {
         const orderBy = order === 'asc' ? -1 : 1;
         const sort = { [sortBy]: orderBy };
 
-        const filterObject = {};
-        const ageFilter = {};
+        const filterObject = { is_deleted: false };
 
         Object.keys(filters).forEach((key) => {
             switch (key) {
                 case 'role':
-                    const rolesArr = filters.role.split(';');
-                    filterObject.role = { $in: rolesArr };
+                    if (filters.role.length) {
+                        const rolesArr = filters.role.split(';');
+                        filterObject.role = { $in: rolesArr };
+                    }
                     break;
                 case 'email':
                     filterObject.email = filters.email;
@@ -28,22 +29,8 @@ module.exports = {
                 case 'name':
                     filterObject.name = { $regex: `^${filters.name}`, $options: 'gi' };
                     break;
-                case 'age.gte':
-                    Object.assign(ageFilter, { $gte: +filters['age.gte'] });
-                    break;
-                case 'age.lte':
-                    Object.assign(ageFilter, { $lte: +filters['age.lte'] });
-                    break;
             }
         });
-
-        if (Object.keys(ageFilter).length) {
-            filterObject.age = ageFilter;
-        }
-
-        console.log('______________________________');
-        console.log(filterObject);
-        console.log('______________________________');
 
         const users = await UserModel
             .find(filterObject)
