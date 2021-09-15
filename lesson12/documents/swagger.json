@@ -1,0 +1,48 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Yar documentation",
+    "version": "0.0.1",
+    "description": "Yar Node API doc"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "Get all users",
+        "operationId": "users",
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "description": "how many items will be shown in one page",
+            "required": false,
+            "default": 10,
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "number of page",
+            "required": false,
+            "default": 1,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/singleUser"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
