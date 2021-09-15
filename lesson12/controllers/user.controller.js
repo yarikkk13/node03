@@ -10,14 +10,9 @@ const {
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
-            const { size, page } = req.query;
+            const allUsers = await userServices.findAll(req.query);
 
-            const users = await UserModel
-                .find()
-                .limit(+size).skip((page - 1) * size)
-                .select('-password -__v');
-
-            res.status(statusCodes.OK).json(users);
+            res.status(statusCodes.OK).json(allUsers);
         } catch (e) {
             next(e);
         }
