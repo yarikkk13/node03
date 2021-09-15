@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const { userRolesEnum, dbTablesEnum } = require('../configs');
-// const { passwordServices } = require('../services');
+const passwordServices = require('../services/password.service');
 
 const userSchema = new Schema({
     name: {
@@ -32,10 +32,6 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
-    language: {
-        type: String,
-        default: 'en'
-    },
     avatar: {
         type: String
     },
@@ -50,19 +46,19 @@ userSchema.virtual('fullName').get(function() {
     return `${this.name} ${this.email}`;
 });
 
-// userSchema.methods = { // for single record // THIS - RECORD
-//     validatePassword(password) {
-//         return passwordServices.compare(password, this.password);
-//     }
-// };
+userSchema.methods = { // for single record // THIS - RECORD
+    validatePassword(password) {
+        return passwordServices.compare(password, this.password);
+    }
+};
 
-// Accessing non-existent property 'passwordServices' of module exports inside circular dependency
-// userSchema.statics = { // for schema // THIS - SCHEMA
-//     async createWithHashPassword(userObject) {
-//         const hashPassword = await passwordServices.hash(userObject.password);
-//
-//         return this.create({ ...userObject, password: hashPassword });
-//     }
-// };
+// Accessing non-existent property 'passwordServices' of module exports inside circular dependency (fixed, comment only for me)
+userSchema.statics = { // for schema // THIS - SCHEMA
+    async createWithHashPassword(userObject) {
+        const hashPassword = await passwordServices.hash(userObject.password);
+
+        return this.create({ ...userObject, password: hashPassword });
+    }
+};
 
 module.exports = model(dbTablesEnum.USER, userSchema);
