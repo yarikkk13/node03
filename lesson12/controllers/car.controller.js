@@ -5,11 +5,7 @@ const { statusCodes } = require('../configs');
 module.exports = {
     getAllCars: async (req, res, next) => {
         try {
-            const { size, page } = req.query;
-
-            const allCars = await CarModel
-                .find().limit(+size)
-                .skip((page - 1) * size);
+            const allCars = await carServices.findAllCars(req.query);
 
             res.status(statusCodes.OK).json(allCars);
         } catch (e) {

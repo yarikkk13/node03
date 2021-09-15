@@ -52,14 +52,14 @@ module.exports = {
             .sort(sort)
             .select('-password -__v');
 
-        const count = await UserModel.countDocuments(filterObject);
+        const items = await UserModel.countDocuments(filterObject);
 
         return {
             data: users,
             page,
-            limit: +size,
-            count,
-            pageCount: Math.ceil(count / size)
+            size: +size,
+            items,
+            pages: Math.ceil(items / size)
         };
     },
 
