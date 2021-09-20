@@ -17,6 +17,7 @@ const {
     authRouter, carRouter, userRouter, adminRouter
 } = require('./routes');
 const cronJobs = require('./cron');
+const Sentry = require('./logger/Sentry');
 
 mongoose.connect(mainConfigs.DB_CONNECT_URL);
 
@@ -25,6 +26,9 @@ app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 1000
 }));
+
+app.use(Sentry.Handlers.requestHandler());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressFileUpload());
@@ -42,6 +46,12 @@ app.use('/', authRouter);
 app.use('/admin', adminRouter);
 app.use('/cars', carRouter);
 app.use('/users', userRouter);
+
+app.use(Sentry.Handlers.errorHandler({
+    shouldHandleError(error) {
+        return !!error.status;
+    },
+}));
 app.use(_mainErrorHandler);
 
 // application
